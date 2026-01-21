@@ -36,31 +36,31 @@ class MainActivity : AppCompatActivity() {
         resultadoTxt = this.findViewById(R.id.resultadoTxt)
         resultado = this.findViewById(R.id.resultado)
 
-        var resultado: Double;
+        var resultadoNum: Double;
 
         btnSumar.setOnClickListener {
             val num1 = num1Txt.text.toString().toDouble();
             val num2 = num2Txt.text.toString().toDouble();
-            resultado = num1+num2
-            resultadoTxt.text = resultado.toString()
+            resultadoNum = num1+num2
+            resultado.text = resultadoNum.toString()
         }
         btnRestar.setOnClickListener {
             val num1 = num1Txt.text.toString().toDouble();
             val num2 = num2Txt.text.toString().toDouble();
-            resultado = num1-num2
-            resultadoTxt.text = resultado.toString()
+            resultadoNum = num1-num2
+            resultado.text = resultadoNum.toString()
         }
         btnMultiplicar.setOnClickListener {
             val num1 = num1Txt.text.toString().toDouble();
             val num2 = num2Txt.text.toString().toDouble();
-            resultado = num1*num2
-            resultadoTxt.text = resultado.toString()
+            resultadoNum = num1*num2
+            resultado.text = resultadoNum.toString()
         }
         btnDividir.setOnClickListener {
             val num1 = num1Txt.text.toString().toDouble();
             val num2 = num2Txt.text.toString().toDouble();
-            resultado = num1/num2
-            resultadoTxt.text = resultado.toString()
+            resultadoNum = num1/num2
+            resultado.text = resultadoNum.toString()
         }
 
     }
