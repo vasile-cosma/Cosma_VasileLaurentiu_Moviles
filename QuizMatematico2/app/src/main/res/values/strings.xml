@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">QuizMatematico2</string>
+    <string name="numRandom">Nº ALEATORIO</string>
+    <string name="pregunta">¿Entre qué números es divisible el número?</string>
+    <string name="divisible2">Es divisible entre 2</string>
+    <string name="divisible3">Es divisible entre 3</string>
+    <string name="divisible5">Es divisible entre 5</string>
+    <string name="divisible10">Es divisible entre 10</string>
+    <string name="noDivisible">No es divisible entre ninguno de estos cuatro números.</string>
+    <string name="comprobar">COMPROBAR RESULTADO</string>
+    <string name="resultadoNulo">Debe escoger al menos una de las opciones</string>
+    <string name="resultadoOk">“Correcto”</string>
+    <string name="resultadoKo">“Error”</string>
+</resources>

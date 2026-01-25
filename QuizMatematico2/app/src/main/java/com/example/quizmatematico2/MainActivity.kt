@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var comprobarBtn: Button
     lateinit var resultadoTxt: TextView
     lateinit var imageView: ImageView
+    lateinit var linearLayout: LinearLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -46,12 +48,14 @@ class MainActivity : AppCompatActivity() {
         comprobarBtn = findViewById(R.id.resultadoBtn)
         resultadoTxt = findViewById(R.id.resultadoTxt)
         imageView = findViewById(R.id.imageView)
+        linearLayout= findViewById(R.id.linearLayout)
+        linearLayout.visibility = View.INVISIBLE
         var num: Int = 1
-        val checkboxes = listOf(entre2Check, entre3Check, entre5Check, entre10Check, entre0Check)
 
         randomBtn.setOnClickListener {
             num = Random.nextInt(1000,2000)
             randomTxt.text = num.toString()
+            linearLayout.visibility = View.VISIBLE
         }
 
         comprobarBtn.setOnClickListener {
