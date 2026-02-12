@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Vasile Dados</string>
+    <string name="par_impar">Par/Impar</string>
+    <string name="mayor_menor_que_7">Mayor/Menor que 7</string>
+    <string name="saldo">Saldo</string>
+    <string name="lanzar_dados">Lanzar dados</string>
+    <string name="haga_su_apuesta">Haga su apuesta</string>
+    <string name="_100">100</string>
+    <string name="vasile_s_dice">Vasile\'s Dice</string>
+    <string name="dados">Dados</string>
+</resources>
