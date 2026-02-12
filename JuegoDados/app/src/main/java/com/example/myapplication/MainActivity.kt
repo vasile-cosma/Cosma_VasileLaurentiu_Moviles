@@ -145,17 +145,22 @@ class MainActivity : AppCompatActivity() {
         saldo.text = (saldoInt + apuesta).toString()
         imagen.setImageResource(R.drawable.ganar_dados)
         imagen.visibility = View.VISIBLE
-        preguntaSeguirJugando()
+        corrutina = lifecycleScope.launch {
+            preguntaSeguirJugando()
+        }
     }
 
     fun derrota(saldoInt: Int, apuesta: Int) {
         saldo.text = (saldoInt - apuesta).toString()
         imagen.setImageResource(R.drawable.perder_dados)
         imagen.visibility = View.VISIBLE
-        preguntaSeguirJugando()
+        corrutina = lifecycleScope.launch {
+            preguntaSeguirJugando()
+        }
     }
 
-    fun preguntaSeguirJugando(){
+    suspend fun preguntaSeguirJugando(){
+        delay(1000)
         AlertDialog.Builder(this)
             .setTitle("Jugando a los dados")
             .setMessage("¿Desea seguir jugando?")
