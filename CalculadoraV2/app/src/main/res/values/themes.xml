@@ -6,4 +6,6 @@
     </style>
 
     <style name="Theme.CalculadoraV2" parent="Base.Theme.CalculadoraV2" />
+
+
 </resources>

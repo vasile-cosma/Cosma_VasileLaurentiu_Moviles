@@ -47,9 +47,9 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.androidx.coordinatorlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-   implementation("androidx.coordinatorlayout:coordinatorlayout:1.3.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
 }
