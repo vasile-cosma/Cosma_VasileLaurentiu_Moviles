@@ -7,9 +7,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.calculadorav2.databinding.ActivityMainBinding
 import com.example.calculadorav2.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -20,18 +24,31 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        /*
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        configurarBotones()
 
         myViewModel.datos.observe(this) {
             binding.txtHistorial.text = it.historial
             binding.txtResultado.text = it.num2
             if (it.error){
                 mostrarSnackbar(it.mensajeError)
+            }
+        }
+        */
+        configurarBotones()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                myViewModel.datos.collect {
+                    binding.txtHistorial.text = it.historial
+                    binding.txtResultado.text = it.num2
+                    if (it.error){
+                        mostrarSnackbar(it.mensajeError)
+                    }
+                }
             }
         }
 
@@ -88,6 +105,8 @@ class MainActivity : AppCompatActivity() {
             .setTextColor(Color.WHITE)
             .show()
     }
+
+
 
     
 }
