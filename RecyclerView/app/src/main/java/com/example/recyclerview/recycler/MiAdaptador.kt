@@ -20,16 +20,16 @@ class MiAdaptador(var misDatos: Datos) : RecyclerView.Adapter<MiVista>() {
     override fun onBindViewHolder(holder: MiVista, position: Int) {
         holder.txtTitulo.text = misDatos.colores[position].nombre
         holder.txtHexadecimal.text = misDatos.colores[position].hexadecimal
-        holder.fila.setBackgroundColor(parseColor(misDatos.colores[position].hexadecimal))
+        holder.fila.setBackgroundColor(misDatos.colores[position].hexadecimal.toColorInt())
 
         if (position == posicionSeleccionada){
-            holder.txtTitulo.setTextColor(parseColor(misDatos.colores[position].hexadecimal))
-            holder.txtHexadecimal.setTextColor(parseColor(misDatos.colores[position].hexadecimal))
+            holder.txtTitulo.setTextColor(misDatos.colores[position].hexadecimal.toColorInt())
+            holder.txtHexadecimal.setTextColor(misDatos.colores[position].hexadecimal.toColorInt())
             holder.fila.setBackgroundColor(Color.WHITE)
         } else {
             holder.txtTitulo.setTextColor(Color.BLACK)
             holder.txtHexadecimal.setTextColor(Color.BLACK)
-            holder.fila.setBackgroundColor(parseColor(misDatos.colores[position].hexadecimal))
+            holder.fila.setBackgroundColor(misDatos.colores[position].hexadecimal.toColorInt())
         }
 
         holder.fila.setOnClickListener {

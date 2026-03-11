@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">ApiPerros</string>
+    <string name="buscar">Buscar</string>
+    <string name="introduzca_la_raza">Introduzca la raza</string>
+    <string name="button">Button</string>
+</resources>
