@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Bisiesto</string>
+    <string name="generar_un_n_mero">Generar un número</string>
+    <string name="_0">0</string>
+    <string name="divisible">Divisible</string>
+    <string name="bisiesto">Bisiesto</string>
+    <string name="validar">Validar</string>
+    <string name="no">NO</string>
+    <string name="si">SI</string>
+    <string name="es_bisiesto_el_n_mero_generado">¿Es bisiesto el número generado?</string>
+    <string name="correcto">Correcto</string>
+    <string name="divisible_entre_3">Divisible entre 3</string>
+    <string name="divisible_entre_10">Divisible entre 10</string>
+    <string name="divisible_entre_5">Divisible entre 5</string>
+    <string name="divisible_entre_2">Divisible entre 2</string>
+    <string name="no_es_divisible_entre_ninguno_de_los_anteriores">No es divisible entre ninguno de los anteriores</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
