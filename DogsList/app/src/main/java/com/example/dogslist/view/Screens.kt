@@ -113,8 +113,8 @@ fun Breeds(navController: NavController) {
 
         Column (
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 40.dp)
+                    .fillMaxWidth()
+                    .padding(top = 40.dp)
         ) {
             // Título
             Text(
