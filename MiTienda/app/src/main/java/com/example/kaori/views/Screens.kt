@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -22,6 +23,8 @@ import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,15 +36,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lint.kotlin.metadata.Visibility
+import com.example.kaori.viewmodel.LoginViewModel
 
 @Composable
 fun KaoriHeader() {
 
 }
 
-@Composable fun Login() {
+@Composable fun Login(
+    loginViewModel : LoginViewModel = viewModel(),
+    onLoginSuccess: () -> Unit
+) {
     var username by remember { mutableStateOf("") }
+    val passwordState = remember { TextFieldState() }
+    val loginState by loginViewModel.loginState.collectAsState()
+
+    LaunchedEffect(loginState) {
+        if (loginState?.accessToken != null) {
+            onLoginSuccess()
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -73,15 +90,34 @@ fun KaoriHeader() {
                 cursorColor = Color.Gray
             )
         )
-        PasswordTextField()
+        PasswordTextField(state = passwordState)
+
+        if (loginState != null && loginState?.accessToken == null) {
+            Text(
+                text = "ERROR AL INICIAR SESIÓN",
+                color = Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 6.dp)
+            )
+        }
+
+        Button(
+            onClick = {
+                loginViewModel.login(username, passwordState.text.toString())
+            },
+            modifier = Modifier.fillMaxWidth().padding(6.dp)
+        ) {
+            Text("Iniciar sesión")
+        }
     }
 
 }
 
-// EJEMPLO de documentación:
+// EJEMPLO de la documentación:
 @Composable
-fun PasswordTextField() {
-    var state = remember { TextFieldState() }
+fun PasswordTextField(state: TextFieldState = remember { TextFieldState() }) {
     var showPassword by remember { mutableStateOf(false) }
     BasicSecureTextField(
         state = state,

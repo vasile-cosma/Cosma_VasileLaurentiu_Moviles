@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.kaori.controllers.Navigation
 import com.example.kaori.ui.theme.KaoriTheme
 import com.example.kaori.views.Login
 import com.example.kaori.views.PasswordTextField
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             KaoriTheme {
-                Login()
+                Navigation()
             }
         }
     }
