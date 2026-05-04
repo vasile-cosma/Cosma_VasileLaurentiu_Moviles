@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.kaori.views.Home
 import com.example.kaori.views.Login
 
 /*
@@ -27,9 +28,8 @@ fun Navigation() {
                 }
             )
         }
-       /* TODO vista aun no está creada
-
-           composable("home") {
-        }*/
+        composable("home") {
+            Home(url = "http://10.0.2.2:8080/")
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.kaori.model
 
+import android.util.Log
 import com.example.kaori.api.RetrofitApi
 import com.example.kaori.api.requests.LoginRequest
 import com.example.kaori.api.responses.LoginResponse
@@ -24,6 +25,7 @@ class LoginModel {
             }
             return loginResponse
         } catch (e: Exception) {
+            Log.e("LoginError", "Error en login", e)
             return LoginResponse(accessToken = null, refreshToken = null)
         }
     }

@@ -20,7 +20,7 @@ import com.example.kaori.views.PasswordTextField
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+//        enableEdgeToEdge()
         setContent {
             KaoriTheme {
                 Navigation()

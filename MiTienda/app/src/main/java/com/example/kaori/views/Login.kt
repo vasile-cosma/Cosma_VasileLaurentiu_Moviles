@@ -1,5 +1,6 @@
 package com.example.kaori.views
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -7,11 +8,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicSecureTextField
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.TextObfuscationMode
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -19,9 +20,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -32,13 +31,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lint.kotlin.metadata.Visibility
 import com.example.kaori.viewmodel.LoginViewModel
+import com.example.kaori.R
 
 @Composable
 fun KaoriHeader() {
@@ -62,11 +63,20 @@ fun KaoriHeader() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 40.dp)
+            .padding(top = 40.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.kaori_logo),
+            contentDescription = "Kaori Logo",
+            modifier = Modifier
+                .size(120.dp)
+                .padding(bottom = 8.dp)
+        )
+
         Text(
             text = "Bienvenido",
-            color = Color.Green,
+            color = colorResource(id = R.color.kaoriGreen),
             fontSize = 30.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
@@ -167,4 +177,6 @@ fun PasswordTextField(state: TextFieldState = remember { TextFieldState() }) {
             }
         }
     )
+
+
 }
