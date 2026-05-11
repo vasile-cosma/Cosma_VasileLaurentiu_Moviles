@@ -48,7 +48,7 @@ fun KaoriHeader() {
 
 @Composable fun Login(
     loginViewModel : LoginViewModel = viewModel(),
-    onLoginSuccess: () -> Unit
+    onLoginSuccess: (String) -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     val passwordState = remember { TextFieldState() }
@@ -56,7 +56,7 @@ fun KaoriHeader() {
 
     LaunchedEffect(loginState) {
         if (loginState?.accessToken != null) {
-            onLoginSuccess()
+            onLoginSuccess(loginState!!.accessToken)
         }
     }
 
