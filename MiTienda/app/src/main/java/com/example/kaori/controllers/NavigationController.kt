@@ -9,9 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.kaori.views.*
 
 
-/*
-NavigationController para poder navegar entre pantallas.
- */
+
 @Composable
 fun Navigation() {
     val myNavController = rememberNavController()
@@ -21,7 +19,6 @@ fun Navigation() {
 
     NavHost(
         navController = myNavController,
-        // Por defecto comienza en el listado de razas.
         startDestination = "login"
     ) {
         composable("login") {
@@ -50,6 +47,15 @@ fun Navigation() {
                         popUpTo("home") { inclusive = true}
                     }
                 }
+            )
+        }
+
+        composable("productDetail/{productId}") { backStackEntry ->
+            val productId = backStackEntry.arguments?.getString("productId") ?: ""
+            ProductDetail(
+                navController = myNavController,
+                token = tokenState.value,
+                productId = productId.toInt(),
             )
         }
 

@@ -1,5 +1,6 @@
 package com.example.kaori.views
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -32,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -54,10 +56,29 @@ fun KaoriHeader() {
     var username by remember { mutableStateOf("") }
     val passwordState = remember { TextFieldState() }
     val loginState by loginViewModel.loginState.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(loginState) {
-        if (loginState?.accessToken != null) {
-            onLoginSuccess(loginState!!.accessToken!!, username)
+        when (loginState?.accessToken) {
+            null -> {
+                if (loginState!= null) {
+                    Toast.makeText(
+                        context,
+                        "Error de servidor",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+            "errorUsuario" -> {
+                Toast.makeText(
+                    context,
+                    "Credenciales incorrectas",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            else -> {
+                onLoginSuccess(loginState!!.accessToken!!, username)
+            }
         }
     }
 
@@ -102,17 +123,6 @@ fun KaoriHeader() {
             )
         )
         PasswordTextField(state = passwordState)
-
-        if (loginState != null && loginState?.accessToken == null) {
-            Text(
-                text = "ERROR AL INICIAR SESIÓN",
-                color = Color.Red,
-                fontSize = 14.sp,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 6.dp)
-            )
-        }
 
         Button(
             onClick = {

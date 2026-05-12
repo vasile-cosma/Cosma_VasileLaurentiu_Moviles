@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class LoginViewModel : ViewModel() {
+class   LoginViewModel : ViewModel() {
     private val _loginState = MutableStateFlow<LoginResponse?>(null)
     val loginState = _loginState.asStateFlow()
 

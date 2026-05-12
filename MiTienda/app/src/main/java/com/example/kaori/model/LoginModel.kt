@@ -18,10 +18,19 @@ class LoginModel {
             val response = retrofitApi.retrofitService.login(loginRequest)
             val loginResponse: LoginResponse
 
-            if (response.isSuccessful && response.body() != null) {
+            Log.d("***LOGIN RESPUESTA - ", "${response.code()}")
+
+            if (response.isSuccessful) {
                 loginResponse = LoginResponse(response.body()!!.accessToken, response.body()!!.refreshToken)
             } else {
-                loginResponse = LoginResponse(accessToken = null, null)
+                when (response.code()){
+                    400,401,403 -> {
+                        loginResponse = LoginResponse("errorUsuario", null)
+                    }
+                    else -> {
+                        loginResponse = LoginResponse(null, null)
+                    }
+                }
             }
             return loginResponse
         } catch (e: Exception) {

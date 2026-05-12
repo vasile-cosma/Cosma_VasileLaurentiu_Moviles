@@ -16,19 +16,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,9 +38,6 @@ import com.example.kaori.R
 import com.example.kaori.model.CategoryDto
 import com.example.kaori.model.ProductDto
 import com.example.kaori.viewmodel.ProductsViewModel
-import kotlinx.coroutines.selects.select
-import kotlin.math.ceil
-
 
 @Composable
 fun ProductRow(
@@ -140,65 +131,24 @@ fun Products(
 ) {
     val myViewModel: ProductsViewModel = viewModel()
     val productsList by myViewModel.productsData.collectAsState()
+    val categories by myViewModel.categories.collectAsState()
+    val selectedCategoryId by myViewModel.selectedCategoryId.collectAsState()
+    val currentPage by myViewModel.currentPage.collectAsState()
+    val totalPages by myViewModel.totalPages.collectAsState()
 
-    var currentPage by remember { mutableIntStateOf(0) }
-    val pageSize = 5
-
-    var selectedCategoryId by remember { mutableStateOf<Int?>(null) }
 
     LaunchedEffect(Unit) {
         myViewModel.getProducts(token)
     }
 
-    val categories by remember(productsList) {
-        derivedStateOf {
-            productsList
-                .flatMap { it.categories }
-                .distinctBy { it.id }
-                .sortedBy { it.name }
-        }
-    }
-
-    val filteredProducts by remember(productsList, selectedCategoryId){
-        derivedStateOf {
-            if (selectedCategoryId == null){
-                productsList
-            } else {
-                productsList.filter { products ->
-                    products.categories.any { category ->
-                        category.id.toInt() == selectedCategoryId
-                    }
-                }
-            }
-        }
-    }
-
-    val totalPages by remember(filteredProducts) {
-        derivedStateOf {
-            if (filteredProducts.isEmpty()) {
-                1
-            } else {
-                ceil(filteredProducts.size / pageSize.toDouble()).toInt()
-            }
-        }
-    }
-
-    val paginatedProducts by remember(filteredProducts, currentPage) {
-        derivedStateOf {
-            filteredProducts
-                .drop(currentPage * pageSize)
-                .take(pageSize)
-        }
-    }
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 40.dp)
+            .padding(top = 20.dp)
     ) {
         Text(
             text = "Listado de Productos",
-            color = Color(0xFF2E7D32),
+            color = Color.Black,
             fontSize = 30.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
@@ -209,8 +159,7 @@ fun Products(
             categories = categories,
             selectedCategoryId = selectedCategoryId,
             onCategorySelected = { categoryId ->
-                selectedCategoryId = categoryId
-                currentPage = 0
+                myViewModel.selectCategory(categoryId)
             }
         )
 
@@ -224,25 +173,16 @@ fun Products(
                     .padding(top = 30.dp)
             )
         } else {
-            /*Text(
-                text = "${currentPage+1} / $totalPages",
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center,
-                color = Color.DarkGray,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp, bottom = 10.dp)
-            )*/
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-                items(paginatedProducts) { product ->
+                items(productsList) { product ->
                     ProductRow(
                         product = product
                     ) {
-                        //TODO navController.navigate("productDetail/${product.id}")
+                        navController.navigate("productDetail/${product.id}")
                     }
                 }
             }
@@ -256,9 +196,7 @@ fun Products(
                 Button(
                     colors = ButtonDefaults.buttonColors(colorResource(R.color.kaoriGreen)),
                     onClick = {
-                        if (currentPage > 0) {
-                            currentPage--
-                        }
+                        myViewModel.previousPage()
                     }
                 ) { Text("Anterior") }
 
@@ -271,9 +209,7 @@ fun Products(
                 Button(
                     colors = ButtonDefaults.buttonColors(colorResource(R.color.kaoriGreen)),
                     onClick = {
-                        if (currentPage < totalPages-1) {
-                            currentPage++
-                        }
+                       myViewModel.nextPage()
                     },
                     enabled = currentPage < totalPages-1
                 ) {
@@ -339,6 +275,144 @@ fun CategoryFilter(
                     }
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun ProductDetail(
+    navController: NavController,
+    token: String,
+    productId: Int
+) {
+    val myViewModel: ProductsViewModel = viewModel()
+    val allProducts by myViewModel.productsData.collectAsState()
+
+    LaunchedEffect(Unit) {
+        myViewModel.getProducts(token)
+    }
+
+    val product = allProducts.find { it.id == productId}
+
+    if (product == null) {
+        Text(
+            text = "Cargando producto...",
+            fontSize = 20.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 30.dp)
+        )
+        return
+    }
+
+    val productCategories = if (product.categories.isEmpty()) {
+        "Sin categoría"
+    } else {
+        product.categories
+            .map {category -> category.name}
+            .joinToString(separator = ",")
+    }
+
+    val image = if (product.img != null) {
+        "http://10.0.2.2:8080/images/products/${product.img}"
+    } else {
+        "http://10.0.2.2:8080/images/products/not-available.webp"
+    }
+
+
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment =  Alignment.CenterHorizontally
+    ) {
+        AsyncImage(
+            model = image,
+            contentDescription = product.name,
+            modifier = Modifier
+                .size(220.dp)
+                .padding(bottom = 16.dp)
+        )
+
+        Text(
+            text = product.name,
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Text(
+            text = "Marca: ${product.brand.name}",
+            fontSize = 18.sp,
+            color = Color.DarkGray,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+        )
+
+        Text(
+            text = "Categorías: $productCategories",
+            fontSize = 18.sp,
+            color = Color.DarkGray,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+        )
+
+        Text(
+            text = product.description,
+            fontSize = 16.sp,
+            color = Color.Black,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+        )
+
+        Text(
+            text = "Precio: ${product.price}€",
+            fontSize = 16.sp,
+            color = Color.Black,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+        )
+
+        if (product.discount > 0) {
+            Text(
+                text = "Descuento: ${product.discount}%",
+                fontSize = 16.sp,
+                color = Color.Black,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            )
+        }
+
+        Text(
+            text = "Stock: ${product.stock}",
+            fontSize = 16.sp,
+            color = Color.Black,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
+        )
+
+        Button(
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorResource(R.color.kaoriGreen)
+            ),
+            onClick = {
+                navController.popBackStack()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 20.dp)
+        ) {
+            Text("Volver")
         }
     }
 }
