@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -48,7 +49,7 @@ fun KaoriHeader() {
 
 @Composable fun Login(
     loginViewModel : LoginViewModel = viewModel(),
-    onLoginSuccess: (String) -> Unit
+    onLoginSuccess: (String, String) -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     val passwordState = remember { TextFieldState() }
@@ -56,7 +57,7 @@ fun KaoriHeader() {
 
     LaunchedEffect(loginState) {
         if (loginState?.accessToken != null) {
-            onLoginSuccess(loginState!!.accessToken)
+            onLoginSuccess(loginState!!.accessToken!!, username)
         }
     }
 
@@ -117,7 +118,8 @@ fun KaoriHeader() {
             onClick = {
                 loginViewModel.login(username, passwordState.text.toString())
             },
-            modifier = Modifier.fillMaxWidth().padding(6.dp)
+            modifier = Modifier.fillMaxWidth().padding(6.dp),
+            colors = ButtonDefaults.buttonColors(colorResource(R.color.kaoriGreen))
         ) {
             Text("Iniciar sesión")
         }

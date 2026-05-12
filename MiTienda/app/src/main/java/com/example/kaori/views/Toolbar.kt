@@ -1,5 +1,6 @@
 package com.example.kaori.views
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,10 +8,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+
 import androidx.compose.material.icons.filled.Backpack
+import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
@@ -24,17 +29,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Modifier.Companion
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.kaori.R
-import com.example.kaori.view.Products
+import com.example.kaori.views.*
+
 
 @Composable
 fun Toolbar(
     token: String,
     user: String,
     url: String,
-    navController: NavController
+    navController: NavController,
+    onLogout: () -> Unit
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
 
@@ -42,6 +50,10 @@ fun Toolbar(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        KaoriHeader(
+            user = user,
+            onLogout = onLogout
+        )
         Box(
            modifier = Modifier
                .weight(1f)
@@ -51,6 +63,7 @@ fun Toolbar(
                 0 -> Home(url)
                 1 -> Products(navController = navController,
                     token = token)
+                2 -> Text("Carrito pendiente")
             }
        }
         PrimaryTabRow(
@@ -103,4 +116,37 @@ fun CartTab(selected: Boolean, onClick: () -> Unit){
         text = { Text("Carrito") },
         icon = { Icon(imageVector = Icons.Filled.ShoppingCart, contentDescription = "Carrito") }
     )
+}
+
+@Composable
+fun KaoriHeader(
+    user: String,
+    onLogout: () -> Unit
+){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colorResource(id = R.color.kaoriGreen))
+            .padding(horizontal = 8.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Text(
+            text = "¡Bienvenido, $user!",
+            color = colorResource(id = R.color.kaoriBackground),
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.weight(1f)
+        )
+        IconButton(
+            onClick = {
+                onLogout()
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Cancel,
+                contentDescription = "Cerrar sesión",
+                tint = colorResource(id = R.color.kaoriBackground)
+            )
+        }
+    }
 }

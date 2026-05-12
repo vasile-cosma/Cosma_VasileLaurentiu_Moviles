@@ -6,10 +6,8 @@ import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.kaori.view.Products
-import com.example.kaori.views.Home
-import com.example.kaori.views.Login
-import com.example.kaori.views.Toolbar
+import com.example.kaori.views.*
+
 
 /*
 NavigationController para poder navegar entre pantallas.
@@ -28,8 +26,9 @@ fun Navigation() {
     ) {
         composable("login") {
             Login(
-                onLoginSuccess = { token ->
+                onLoginSuccess = { token, username ->
                     tokenState.value = token
+                    userState.value = username
 
                     myNavController.navigate("home") {
                         popUpTo("login") { inclusive = true } // evita volver al login con "atrás"
@@ -42,9 +41,18 @@ fun Navigation() {
                 token = tokenState.value,
                 user = userState.value,
                 url = "http://10.0.2.2:8080/",
-                navController = myNavController
+                navController = myNavController,
+                onLogout = {
+                    tokenState.value = ""
+                    userState.value = ""
+
+                    myNavController.navigate("login"){
+                        popUpTo("home") { inclusive = true}
+                    }
+                }
             )
         }
+
 
 
     }
