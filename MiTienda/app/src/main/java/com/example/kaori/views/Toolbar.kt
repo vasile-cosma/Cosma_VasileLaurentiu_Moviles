@@ -63,7 +63,7 @@ fun Toolbar(
                 0 -> Home(url)
                 1 -> Products(navController = navController,
                     token = token)
-                2 -> Text("Carrito pendiente")
+                2 -> Cart(token=token)
             }
        }
         PrimaryTabRow(

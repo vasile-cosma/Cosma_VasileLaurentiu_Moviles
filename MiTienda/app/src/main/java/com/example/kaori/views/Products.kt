@@ -23,9 +23,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -35,8 +39,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.kaori.R
+import com.example.kaori.model.CartModel
 import com.example.kaori.model.CategoryDto
 import com.example.kaori.model.ProductDto
+import com.example.kaori.viewmodel.CartViewModel
 import com.example.kaori.viewmodel.ProductsViewModel
 
 @Composable
@@ -197,7 +203,8 @@ fun Products(
                     colors = ButtonDefaults.buttonColors(colorResource(R.color.kaoriGreen)),
                     onClick = {
                         myViewModel.previousPage()
-                    }
+                    },
+                    enabled = currentPage == 0
                 ) { Text("Anterior") }
 
                 Text(
@@ -286,7 +293,12 @@ fun ProductDetail(
     productId: Int
 ) {
     val myViewModel: ProductsViewModel = viewModel()
+    val cartViewModel: CartViewModel = viewModel()
     val allProducts by myViewModel.productsData.collectAsState()
+
+    val context = LocalContext.current
+    var units by remember { mutableIntStateOf(1) }
+
 
     LaunchedEffect(Unit) {
         myViewModel.getProducts(token)
@@ -321,20 +333,13 @@ fun ProductDetail(
     }
 
 
-
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .padding(16.dp),
         horizontalAlignment =  Alignment.CenterHorizontally
     ) {
-        AsyncImage(
-            model = image,
-            contentDescription = product.name,
-            modifier = Modifier
-                .size(220.dp)
-                .padding(bottom = 16.dp)
-        )
+        KaoriHeader()
 
         Text(
             text = product.name,
@@ -343,6 +348,14 @@ fun ProductDetail(
             color = Color.Black,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
+        )
+
+        AsyncImage(
+            model = image,
+            contentDescription = product.name,
+            modifier = Modifier
+                .size(220.dp)
+                .padding(bottom = 16.dp)
         )
 
         Text(
@@ -392,19 +405,55 @@ fun ProductDetail(
             )
         }
 
-        Text(
-            text = "Stock: ${product.stock}",
-            fontSize = 16.sp,
-            color = Color.Black,
+        Row (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp)
-        )
+                .padding(top = 20.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+           Button(
+               colors = ButtonDefaults.buttonColors(colorResource(R.color.kaoriGreen)),
+               onClick = {
+                   if (units >1) {
+                       units--
+                   }
+               }
+           ) {
+               Text("-")
+           }
+
+            Text(
+                text = units.toString(),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(horizontal = 6.dp)
+            )
+
+            Button (
+                colors = ButtonDefaults.buttonColors(colorResource(R.color.kaoriGreen)),
+                onClick = {
+                    if (units < product.stock) units++
+                }
+
+                ) { Text("+")}
+
+            Button (
+                colors = ButtonDefaults.buttonColors(colorResource(R.color.kaoriGreen)),
+                onClick = {
+                    cartViewModel.addProductToCart(
+                        token = token,
+                        productId = product.id,
+                        units = units
+                    )
+                }
+
+            ) { Text("Añadir al carrito")}
+        }
 
         Button(
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(R.color.kaoriGreen)
-            ),
+            colors = ButtonDefaults.buttonColors(Color.Red),
             onClick = {
                 navController.popBackStack()
             },
@@ -414,5 +463,6 @@ fun ProductDetail(
         ) {
             Text("Volver")
         }
+
     }
 }

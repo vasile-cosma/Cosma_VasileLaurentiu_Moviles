@@ -16,7 +16,7 @@ class ProductsViewModel : ViewModel() {
     val productsData = _productsData.asStateFlow()
     private val pageSize = 5
     private val _allProducts = MutableStateFlow<List<ProductDto>>(emptyList())
-    private var allProducts = _allProducts.asStateFlow()
+    val allProducts = _allProducts.asStateFlow()
     private val _categories = MutableStateFlow<List<CategoryDto>>(emptyList())
     val categories = _categories.asStateFlow()
     private val _selectedCategoryId = MutableStateFlow<Int?>(null)
