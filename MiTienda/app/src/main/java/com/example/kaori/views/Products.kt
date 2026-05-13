@@ -153,14 +153,21 @@ fun Products(
             .padding(top = 20.dp)
     ) {
         Text(
-            text = "Listado de Productos",
+            text = "Catálogo",
             color = Color.Black,
             fontSize = 30.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.fillMaxWidth()
         )
-
+        Text(
+            text = " Los mejores tés, a un click",
+            color = Color.Black,
+            fontSize = 20.sp,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.fillMaxWidth().padding(top = 1.dp)
+        )
         CategoryFilter(
             categories = categories,
             selectedCategoryId = selectedCategoryId,
@@ -294,9 +301,9 @@ fun ProductDetail(
 ) {
     val myViewModel: ProductsViewModel = viewModel()
     val cartViewModel: CartViewModel = viewModel()
-    val allProducts by myViewModel.productsData.collectAsState()
+    val allProducts by myViewModel.allProducts.collectAsState()
 
-    val context = LocalContext.current
+
     var units by remember { mutableIntStateOf(1) }
 
 
@@ -447,7 +454,10 @@ fun ProductDetail(
                         productId = product.id,
                         units = units
                     )
-                }
+                },
+                modifier = Modifier
+                    .padding(start = 6.dp)
+
 
             ) { Text("Añadir al carrito")}
         }

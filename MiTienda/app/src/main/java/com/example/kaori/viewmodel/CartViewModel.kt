@@ -11,11 +11,11 @@ import kotlinx.coroutines.launch
 class CartViewModel : ViewModel() {
     private val model = CartModel()
 
-    private val _cartItems = MutableStateFlow<List<CartItemDto>>(emptyList())
-    val cartItems = _cartItems.asStateFlow()
-    private val _selectedItem = MutableStateFlow<CartItemDto?>(null)
-    val selectedItem = _selectedItem.asStateFlow()
-    private val _selectedItemProductId = MutableStateFlow<Int?>(null)
+    private val _cartProducts = MutableStateFlow<List<CartItemDto>>(emptyList())
+    val cartProducts = _cartProducts.asStateFlow()
+    private val _selectedProduct = MutableStateFlow<CartItemDto?>(null)
+    val selectedProduct = _selectedProduct.asStateFlow()
+    private val _selectedProductId = MutableStateFlow<Int?>(null)
     private val _showDeleteDialog = MutableStateFlow(false)
     val showDeleteDialog = _showDeleteDialog.asStateFlow()
     private val _message = MutableStateFlow<String?>(null)
@@ -23,7 +23,7 @@ class CartViewModel : ViewModel() {
 
     fun getCart(token: String){
         viewModelScope.launch {
-            _cartItems.value = model.getCart(token)
+            _cartProducts.value = model.getCart(token)
         }
     }
 
@@ -42,19 +42,19 @@ class CartViewModel : ViewModel() {
     }
 
     fun selectItemToDelete(item: CartItemDto, productId: Int) {
-        _selectedItem.value = item
-        _selectedItemProductId.value = productId
+        _selectedProduct.value = item
+        _selectedProductId.value = productId
         _showDeleteDialog.value = true
     }
 
     fun cancelDelete() {
-        _selectedItem.value = null
-        _selectedItemProductId.value = null
+        _selectedProduct.value = null
+        _selectedProductId.value = null
         _showDeleteDialog.value = false
     }
 
     fun confirmDelete(token: String) {
-        val productId = _selectedItemProductId.value ?: return
+        val productId = _selectedProductId.value ?: return
         viewModelScope.launch {
             val success = model.removeProductFromCart(
                 token = token,
@@ -66,15 +66,13 @@ class CartViewModel : ViewModel() {
             } else {
                 _message.value = "No se pudo eliminar el producto"
             }
-            _selectedItem.value = null
-            _selectedItemProductId.value = null
+            _selectedProduct.value = null
+            _selectedProductId.value = null
             _showDeleteDialog.value = false
         }
     }
 
-    fun clearMessage() {
-        _message.value = null
-    }
+
 
 
 }

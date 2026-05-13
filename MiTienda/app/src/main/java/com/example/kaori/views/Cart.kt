@@ -1,6 +1,5 @@
 package com.example.kaori.views
 
-import android.widget.Button
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -81,7 +80,7 @@ fun CartRow(
             )
 
             Text(
-                text = "Total: ${item.totalPrice} €",
+                text = "Total: ${"%.2f".format(item.totalPrice)} €",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
@@ -97,9 +96,9 @@ fun Cart(
     val cartViewModel: CartViewModel = viewModel()
     val productsViewModel: ProductsViewModel = viewModel()
 
-    val cartItems by cartViewModel.cartItems.collectAsState()
+    val cartItems by cartViewModel.cartProducts.collectAsState()
     val allProducts by productsViewModel.allProducts.collectAsState()
-    val selectedItem by cartViewModel.selectedItem.collectAsState()
+    val selectedItem by cartViewModel.selectedProduct.collectAsState()
     val showDeleteDialog by cartViewModel.showDeleteDialog.collectAsState()
     val message by cartViewModel.message.collectAsState()
 
@@ -117,7 +116,6 @@ fun Cart(
                 Toast.LENGTH_SHORT
             ).show()
 
-            cartViewModel.clearMessage()
         }
     }
 
